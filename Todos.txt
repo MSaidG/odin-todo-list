@@ -1,0 +1,13 @@
+-> Create object dynamically with factories or constructors
+-> Title, description, dueDate, priority
+-> Notes, checklist
+-> Make user able to choose a project (School, Job, House etc.)
+-> Creating new to-do, setting to-do, chaning to-do, chaning dom (seperate)
+-> View all projects, view one project list at a time, expanding to-do, edit-change
+-> use format and compare from date-nfs lib
+-> function for saving todo every time created to local
+-> function for look up local data when app first loaded
+-> make sure app doesnt crash when there is no data
+-> you can check local data from application(local storage tab in dev tools)
+-> local storage use JSON so cant store functions, find a way to methods
+to those when you fetch them

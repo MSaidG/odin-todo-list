@@ -1,3 +1,3 @@
-export default function print() {
-    console.log("LOGGERED!");
+export default function p(text) {
+    console.log(text);
 }
