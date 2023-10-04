@@ -1,56 +1,35 @@
 import './style.css';
 import { compareAsc, format } from 'date-fns';
 import p from './logger';
+import { body, dialog, context, showBtn,
+  form, closeBtn, addBtn, dialogText, titleInpt,
+  titleLbl, descriptionInpt, descriptionLbl, 
+  dueDateInpt, dueDateLbl, priorityInpt, 
+  priorityLbl, listContext, list} from './dom';
 
 // DOM Manipulation
 
 const storage = window["localStorage"];
-const body = document.querySelector("body");
-const dialog = document.createElement("dialog");
-const context = document.createElement("div");
-const showBtn = document.createElement("button");
 
-// Form
-const form = document.createElement("form");
-const closeBtn = document.createElement("button");
-const addBtn = document.createElement("button");
-const dialogText = document.createElement("p");
-const titleLbl = document.createElement("label");
-const descriptionLbl = document.createElement("label");
-const dueDateLbl = document.createElement("label");
-const priorityLbl = document.createElement("label");
-const titleInpt = document.createElement("input");
-const descriptionInpt = document.createElement("input");
-const dueDateInpt = document.createElement("input");
-const priorityInpt = document.createElement("input");
 
-showBtn.textContent = "ADD TODO";
 
-form.style.display = "flex";
-form.style.flexDirection = "column";
-form.style.gap = "10px";
+addBtn.addEventListener("click", (e) => {
+  
+  let isValid = checkValidation();
+  if (isValid) {
+    let todo = setTodo(titleInpt.value, descriptionInpt.value, 
+      dueDateInpt.value, priorityInpt.value);
 
-dialogText.textContent = "Add Your Todo";
-titleLbl.textContent = "Title: ";
-titleInpt.setAttribute("required", "");
-descriptionLbl.textContent = "Description: ";
-dueDateLbl.textContent = "Due Date: ";
-priorityLbl.textContent = "Priority: ";
-addBtn.textContent = "Add";
-addBtn.setAttribute("onsubmit", "return");
-closeBtn.textContent = "Close";
+    storeData(todo);
+  }
 
-showBtn.addEventListener("click", () => {
-  dialog.showModal();
-});
+  e.preventDefault();
 
-closeBtn.addEventListener("click", () => {
-  dialog.close();
 });
 
 
 function checkValidation() {
-  
+
   titleInpt.setCustomValidity(""); 
   let isValid = titleInpt.reportValidity();
   
@@ -62,34 +41,8 @@ function checkValidation() {
     titleInpt.setCustomValidity("Title name is required!");
   }
   
-  p(`title input: ${titleInpt.value}`);
-  p(`priority: ${titleInpt.priority}`);
   return isValid;
 }
-
-addBtn.addEventListener("click", (e) => {
-  
-  let isValid = checkValidation();
-  if (isValid) {
-    let todo = setTodo(titleInpt.value, titleInpt.description, 
-      titleInpt.dueDate, titleInpt.priority);
-
-    storeData(todo);
-  }
-
-  e.preventDefault();
-
-});
-
-body.append(context);
-context.append(showBtn, dialog);
-dialog.append(form);
-form.append(dialogText, titleLbl, titleInpt, 
-  descriptionLbl, descriptionInpt, 
-  dueDateLbl, dueDateInpt,
-  priorityLbl, priorityInpt,
-  addBtn, closeBtn);
-
 
 // todo object
 //  KEY IS ID
@@ -111,7 +64,38 @@ function setTodo(title, description, dueDate, priority) {
 
 for (let key in storage) {
 
-  p(`keys: ${key}`);
+  if (hasNumber(key)) {
+    let jsonData = getData(key);
+    let data = JSON.parse(jsonData);
+
+    p(data);
+
+    let listItemContext = document.createElement("div");
+    let titleH = document.createElement("h3");
+    let descriptionP = document.createElement("p");
+    let dueDateP = document.createElement("p");
+    let priorityP = document.createElement("p");
+    let listItem = document.createElement("li");
+
+    listItemContext.style.backgroundColor = "brown";
+
+    if (data.title)titleH.textContent = data.title;
+    if (data.description) descriptionP.textContent = data.description;
+    if (data.dueDate) dueDateP.textContent = data.dueDate;
+    if (data.priority) priorityP.textContent = data.priority;
+
+    listItemContext.append(titleH, descriptionP, dueDateP, priorityP);
+    listItem.append(listItemContext);
+    list.append(listItem)
+  }
+  //if (!hasNumber(key)) {
+  //  storage.removeItem(key);
+  //}
+  p(getData(key));
+}
+
+function hasNumber(myString) {
+  return /\d/.test(myString);
 }
 
 // USE OF FORMAT AND COMPARE
