@@ -2,69 +2,140 @@ import './style.css';
 import { compareAsc, format } from 'date-fns';
 import p from './logger';
 
-const storage = window["localStorage"];
+// DOM Manipulation
 
+const storage = window["localStorage"];
+const body = document.querySelector("body");
+const dialog = document.createElement("dialog");
+const context = document.createElement("div");
+const showBtn = document.createElement("button");
+
+// Form
+const form = document.createElement("form");
+const closeBtn = document.createElement("button");
+const addBtn = document.createElement("button");
+const dialogText = document.createElement("p");
+const titleLbl = document.createElement("label");
+const descriptionLbl = document.createElement("label");
+const dueDateLbl = document.createElement("label");
+const priorityLbl = document.createElement("label");
+const titleInpt = document.createElement("input");
+const descriptionInpt = document.createElement("input");
+const dueDateInpt = document.createElement("input");
+const priorityInpt = document.createElement("input");
+
+showBtn.textContent = "ADD TODO";
+
+form.style.display = "flex";
+form.style.flexDirection = "column";
+form.style.gap = "10px";
+
+dialogText.textContent = "Add Your Todo";
+titleLbl.textContent = "Title: ";
+titleInpt.setAttribute("required", "");
+descriptionLbl.textContent = "Description: ";
+dueDateLbl.textContent = "Due Date: ";
+priorityLbl.textContent = "Priority: ";
+addBtn.textContent = "Add";
+addBtn.setAttribute("onsubmit", "return");
+closeBtn.textContent = "Close";
+
+showBtn.addEventListener("click", () => {
+  dialog.showModal();
+});
+
+closeBtn.addEventListener("click", () => {
+  dialog.close();
+});
+
+
+function checkValidation() {
+  
+  titleInpt.setCustomValidity(""); 
+  let isValid = titleInpt.reportValidity();
+  
+  if (isValid){
+    dialog.close();
+  } 
+  else 
+  {
+    titleInpt.setCustomValidity("Title name is required!");
+  }
+  
+  p(`title input: ${titleInpt.value}`);
+  p(`priority: ${titleInpt.priority}`);
+  return isValid;
+}
+
+addBtn.addEventListener("click", (e) => {
+  
+  let isValid = checkValidation();
+  if (isValid) {
+    let todo = setTodo(titleInpt.value, titleInpt.description, 
+      titleInpt.dueDate, titleInpt.priority);
+
+    storeData(todo);
+  }
+
+  e.preventDefault();
+
+});
+
+body.append(context);
+context.append(showBtn, dialog);
+dialog.append(form);
+form.append(dialogText, titleLbl, titleInpt, 
+  descriptionLbl, descriptionInpt, 
+  dueDateLbl, dueDateInpt,
+  priorityLbl, priorityInpt,
+  addBtn, closeBtn);
 
 
 // todo object
-let test = {}
-test.title = "Odin";
-test.description = "Finish at least one level";
-test.dueDate = format(new Date(2023, 9, 5), 'yyyy-MM-dd');
-test.priority = "High"
+//  KEY IS ID
 
-p(test);
 
-function setTodo() {
 
+function setTodo(title, description, dueDate, priority) {
   const todo = {}
+
   todo.id = Date.now().toString();
-  todo.title = prompt("title: ");
-  todo.description = prompt("description: ");
-  todo.dueDate = prompt("dueDate: ");
-  todo.priority = prompt("priority: ");
+  todo.title = title;
+  todo.description = description;
+  todo.dueDate = dueDate;
+  todo.priority = priority;
 
   return todo;
 }
 
-const test1 = setTodo();
-(test1);
-
-
-storeData(test);
-storeData(test1.id, JSON.stringify(test1));
-
-p(`Data: ${getData(test.title)}`);
-p(getData(test1.id));
 
 for (let key in storage) {
 
-  p(key);
+  p(`keys: ${key}`);
 }
 
-format(new Date(2014, 1, 11), 'yyyy-MM-dd')
-const dates = [
-  new Date(1995, 6, 2),
-  new Date(1987, 1, 11),
-  new Date(1989, 6, 10),
-]
-dates.sort(compareAsc)
-dates.forEach((e) => {
+// USE OF FORMAT AND COMPARE
 
-    p(e);
-});
+// format(new Date(2014, 1, 11), 'yyyy-MM-dd')
+// const dates = [
+//   new Date(1995, 6, 2),
+//   new Date(1987, 1, 11),
+//   new Date(1989, 6, 10),
+// ]
+// dates.sort(compareAsc)
+// dates.forEach((e) => {
+// 
+//     p(e);
+// });
 
 
 
 
-
-p(getData("holiday"));
-
-storeData ("food", "good");
+// WINDOW FUNCTIONS
 
 function storeData (item) {
 
-  return storage.setItem(item.title, JSON.stringify(item));
+  return storage.setItem(item.id, JSON.stringify(item));
 }
 
 function getData (key) {
