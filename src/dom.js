@@ -19,12 +19,16 @@ export const priorityInpt = document.createElement("input");
 export const listContext = document.createElement("div");
 export const list = document.createElement("ul");
 
+context.classList.add("project");
+context.setAttribute("id", "main");
+
 showBtn.textContent = "ADD TODO";
 
 form.style.display = "flex";
 form.style.flexDirection = "column";
 form.style.gap = "10px";
 
+// Dialog form
 dialogText.textContent = "Add Your Todo";
 titleLbl.textContent = "Title: ";
 titleInpt.setAttribute("required", "");
