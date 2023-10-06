@@ -6,47 +6,47 @@ import { body, dialog, context, showBtn,
   titleLbl, descriptionInpt, descriptionLbl, 
   dueDateInpt, dueDateLbl, priorityInpt, 
   priorityLbl, listContext, list, 
-  createTodoItem, editKey, updateTodoItem} from './dom';
+  createTodoItem, editKey, updateTodoItem,
+  displayProjects} from './dom';
 
 // DOM Manipulation
+export const storage = window["localStorage"];
 
-const storage = window["localStorage"];
+
+//
+//
 
 
 addBtn.addEventListener("click", (e) => {
 
-  p(e.target.textContent);
   e.preventDefault();
+  let isValid = checkValidation();
   
-  if (e.target.textContent === "Add")
-  {
-    let isValid = checkValidation();
-    if (isValid) {
-      let todo = setTodo(titleInpt.value, descriptionInpt.value, 
-        dueDateInpt.value, priorityInpt.value);
-  
-      storeData(todo);
-      displayData(todo.id);
+  if (isValid) {
+
+    if (e.target.textContent === "Add") {
+      
+        let todo = setTodo(titleInpt.value, descriptionInpt.value, 
+          dueDateInpt.value, priorityInpt.value);
+        
+        storeData(todo);
+        displayData(todo.id);
     }
-  }
-  else if (e.target.textContent === "Edit") {
+    else if (e.target.textContent === "Edit") {
 
+        let jsonData = getData(editKey);
+        let data = JSON.parse(jsonData);
 
-    let jsonData = getData(editKey);
-    let data = JSON.parse(jsonData);
-    let isValid = checkValidation();
-    if (isValid) {
+        data.title = titleInpt.value;
+        data.description = descriptionInpt.value;
+        data.dueDate = dueDateInpt.value;
+        data.priority = priorityInpt.value;
 
-      data.title = titleInpt.value;
-      data.description = descriptionInpt.value;
-      data.dueDate = dueDateInpt.value;
-      data.priority = priorityInpt.value;
+        updateTodoItem(editKey);
+        storeData(data);
+        displayData(data.id);
+    } 
 
-
-      storeData(data);
-      updateTodoItem(editKey);
-      displayData(data.id);
-    }
   }
 
 });
@@ -62,7 +62,7 @@ function checkValidation() {
   } 
   else 
   {
-    titleInpt.setCustomValidity("Title name is required!");
+    titleInpt.setCustomValidity("Shouldn't be empty!");
   }
   
   return isValid;
@@ -86,6 +86,7 @@ function setTodo(title, description, dueDate, priority) {
 // CREATE TODO LIST
 displayAllData();
 displayData();
+displayProjects();
 function displayData (key) {
 
   if (hasNumber(key)) {
@@ -94,7 +95,7 @@ function displayData (key) {
   }
 
 }
-function displayAllData() {
+export function displayAllData() {
 
   for (let key in storage) {
 
@@ -105,7 +106,9 @@ function displayAllData() {
   
   }
 }
-updateTodoItem("1696588272237");
+
+
+
 
 
 function hasNumber(myString) {

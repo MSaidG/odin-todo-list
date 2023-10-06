@@ -2,3 +2,14 @@ body {
     background-color: yellowgreen;
     overflow: scroll;
 }
+
+.special {
+
+    cursor: pointer;
+    color: blue;
+}
+
+.selected {
+
+    color: brown;
+}
