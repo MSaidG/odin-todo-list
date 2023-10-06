@@ -1,3 +1,7 @@
+import {removeData, getData} from './index';
+import p from './logger';
+
+
 export const body = document.querySelector("body");
 export const dialog = document.createElement("dialog");
 export const context = document.createElement("div");
@@ -19,6 +23,8 @@ export const priorityInpt = document.createElement("input");
 export const listContext = document.createElement("div");
 export const list = document.createElement("ul");
 
+export let editKey = 0;
+
 context.classList.add("project");
 context.setAttribute("id", "main");
 
@@ -36,10 +42,10 @@ descriptionLbl.textContent = "Description: ";
 dueDateLbl.textContent = "Due Date: ";
 priorityLbl.textContent = "Priority: ";
 addBtn.textContent = "Add";
-addBtn.setAttribute("onsubmit", "return");
 closeBtn.textContent = "Close";
 
 showBtn.addEventListener("click", () => {
+  addBtn.textContent = "Add";
   dialog.showModal();
 });
 
@@ -56,3 +62,85 @@ form.append(dialogText, titleLbl, titleInpt,
   dueDateLbl, dueDateInpt,
   priorityLbl, priorityInpt,
   addBtn, closeBtn);
+
+export function createTodoItem (key) {
+  let jsonData = getData(key);
+  let data = JSON.parse(jsonData);
+
+  p(data);
+
+  const listItemContext = document.createElement("div");
+  const buttonContext = document.createElement("div");
+  const titleH = document.createElement("h3");
+  const descriptionP = document.createElement("p");
+  const dueDateP = document.createElement("p");
+  const priorityP = document.createElement("p");
+  const listItem = document.createElement("li");
+  const deleteBtn = document.createElement("button");
+  const editBtn = document.createElement("button");
+
+  listItemContext.style.backgroundColor = "brown";
+  listItemContext.style.display = "flex";
+  listItemContext.style.justifyContent = "space-between";
+
+  buttonContext.style.display = "flex";
+  buttonContext.style.gap = "10px";
+
+  deleteBtn.textContent = "Delete";
+  deleteBtn.setAttribute("id", key);
+
+  editBtn.textContent = "Edit";
+  editBtn.setAttribute("id", key);
+
+  deleteBtn.addEventListener("click", (e) => {
+
+    let key = e.target.id;
+    removeData(key);
+    listItem.remove();
+  });
+
+  editBtn.addEventListener("click", (e) => {
+
+    editKey = e.target.id;
+    addBtn.textContent = "Edit";
+    p(e);
+
+    let jsonData = getData(editKey);
+    let data = JSON.parse(jsonData);
+
+    dialog.showModal();
+
+    titleInpt.value = data.title;  
+    descriptionInpt.value = data.description;  
+    dueDateInpt.value = data.dueDate;  
+    priorityInpt.value = data.priority;  
+
+  });
+
+  if (data.title)titleH.textContent = data.title;
+  if (data.description) descriptionP.textContent = data.description;
+  if (data.dueDate) dueDateP.textContent = data.dueDate;
+  if (data.priority) priorityP.textContent = data.priority;
+
+  buttonContext.append(editBtn, deleteBtn);
+  listItemContext.append(titleH, descriptionP, dueDateP, priorityP, buttonContext);
+  listItem.append(listItemContext);
+  list.append(listItem)
+}
+  
+
+export function updateTodoItem (key) {
+
+  const listItems = document.querySelectorAll("li");
+
+  listItems.forEach((item) => {
+
+    let button = item.querySelector("button");
+
+    if (key === button.id)
+    {
+      item.remove();
+    }
+  });
+
+}
