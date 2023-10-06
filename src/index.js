@@ -1,20 +1,13 @@
 import './style.css';
 import { compareAsc, format } from 'date-fns';
 import p from './logger';
-import { body, dialog, context, showBtn,
-  form, closeBtn, addBtn, dialogText, titleInpt,
-  titleLbl, descriptionInpt, descriptionLbl, 
-  dueDateInpt, dueDateLbl, priorityInpt, 
-  priorityLbl, listContext, list, 
-  createTodoItem, editKey, updateTodoItem,
-  displayProjects} from './dom';
+import { dialog, addBtn, titleInpt,
+  descriptionInpt,  dueDateInpt,  priorityInpt, 
+  createTodoItem, editKey, updateTodoItem } from './dom';
+import { displayProjects } from './project';
 
 // DOM Manipulation
 export const storage = window["localStorage"];
-
-
-//
-//
 
 
 addBtn.addEventListener("click", (e) => {
@@ -106,9 +99,6 @@ export function displayAllData() {
   
   }
 }
-
-
-
 
 
 function hasNumber(myString) {

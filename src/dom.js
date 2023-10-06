@@ -1,4 +1,4 @@
-import {removeData, getData, storage, displayAllData} from './index';
+import {removeData, getData} from './index';
 import p from './logger';
 
 // Navigation
@@ -29,17 +29,11 @@ export const list = document.createElement("ul");
 export let editKey = 0;
 
 
-let projects = [];
-
-//projects.push("main");
-
 context.classList.add("project");
 context.setAttribute("id", "main");
 
-
 header.style.display = "flex";
 header.style.gap = "1rem";
-
 
 list.style.display = "flex";
 list.style.flexDirection = "column";
@@ -74,57 +68,6 @@ closeBtn.addEventListener("click", () => {
   dialog.close();
 });
 
-projectBtn.addEventListener("click", () => {
-
-  projectBtn.style.display = "none";
-
-  const div = document.createElement("div");
-  const inpt = document.createElement("input");
-  const createBtn = document.createElement("button");
-  const cancelBtn = document.createElement("button");
-
-
-  inpt.placeholder = "Project Name: ";
-  inpt.setAttribute("required", "");
-
-  div.style.display = "flex";
-  div.style.backgroundColor = "brown";
-
-  createBtn.textContent = "Create";
-  cancelBtn.textContent = "Cancel";
-
-  div.append(inpt, createBtn, cancelBtn);
-  projectBtn.after(div);
-
-  createBtn.addEventListener("click", () => {
-
-    inpt.setCustomValidity(""); 
-    let isValid = inpt.reportValidity();
-    
-    if (isValid){
-
-      p("what")
-      projects.push(inpt.value);
-      storage.setItem("projects", projects);
-      div.remove();
-      projectBtn.style.display = "inline-block";
-      displayProject();
-    } 
-    else 
-    {
-      inpt.setCustomValidity("Shouldn't be empty!");
-    }
-
-  });
-
-  cancelBtn.addEventListener("click", () => {
-    div.remove();
-    projectBtn.style.display = "inline-block";
-  });
-  
-});
-
-//p(storage.getItem("projects"));
 
 body.append(context);
 header.append(showBtn, projectBtn, projectList);
@@ -141,8 +84,6 @@ export function createTodoItem (key) {
   let jsonData = getData(key);
   let data = JSON.parse(jsonData);
   let currentProject = context.id;
-  p(currentProject);
-  p(data);
 
   if (data.project === currentProject) {
     const listItemContext = document.createElement("div");
@@ -205,21 +146,9 @@ export function createTodoItem (key) {
   }
 
 }
-  
-export function updateAllTodoItems () {
-
-  const listItems = document.querySelectorAll(".todo-item");
-
-  listItems.forEach((item) => {
-
-      item.remove();
-    
-  });
-
-}
 
 export function updateTodoItem (key) {
-
+  
   const listItems = document.querySelectorAll(".todo-item");
 
   listItems.forEach((item) => {
@@ -234,56 +163,3 @@ export function updateTodoItem (key) {
 
 }
 
-export function displayProject () {
-
-  let data = getData("projects");
-  projects = data.split(",");
-
-  let project = projects[projects.length - 1];
-
-  createProjectListItem(project);
-
-}
-
-
-export function displayProjects () {
-
-  let data = getData("projects");
-  projects = data.split(",");
-
-  for (let project of projects) {
-    createProjectListItem(project);
-  }
-
-}
-
-export function createProjectListItem(project) {
-  let li = document.createElement("li");
-
-  li.classList.add("project");
-  li.textContent = project;
-
-  if (project === "main") li.classList.add("selected");
-
-  li.addEventListener("mouseover", (e) => {
-    e.target.classList.add("special");
-  });
-
-  li.addEventListener("mouseout", (e) => {
-    e.target.classList.remove("special");
-
-  });
-
-  li.addEventListener("click", (e) => {
-    context.setAttribute("id", e.target.textContent);
-
-    updateAllTodoItems();
-    displayAllData();
-
-    document.querySelector(".selected").classList.remove("selected");
-    e.target.classList.add("selected");
-
-  });
-
-  projectList.append(li);
-}
