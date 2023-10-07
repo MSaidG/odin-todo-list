@@ -88,6 +88,8 @@ export function createTodoItem (key) {
   if (data.project === currentProject) {
     const listItemContext = document.createElement("div");
     const buttonContext = document.createElement("div");
+    const descriptionContext = document.createElement("div");
+    const descriptionText = document.createElement("p");
     const titleH = document.createElement("h3");
     const descriptionP = document.createElement("p");
     const dueDateP = document.createElement("p");
@@ -96,9 +98,24 @@ export function createTodoItem (key) {
     const deleteBtn = document.createElement("button");
     const editBtn = document.createElement("button");
   
-    listItemContext.style.backgroundColor = "brown";
-    listItemContext.style.display = "flex";
+    listItemContext.classList.add("list-item");
+
     listItemContext.style.justifyContent = "space-between";
+
+    descriptionContext.style.backgroundColor = "red";
+    descriptionContext.style.display = "none";
+    descriptionText.textContent = data.description;
+    descriptionText.classList.add("description");
+
+    listItemContext.addEventListener("click", () => {
+      if (descriptionContext.style.display === "none") {
+        descriptionContext.style.display = "block";
+      }
+      else {
+        descriptionContext.style.display = "none";
+      }
+    });
+
     listItem.classList.add("todo-item");
   
     buttonContext.style.display = "flex";
@@ -139,9 +156,10 @@ export function createTodoItem (key) {
     if (data.dueDate) dueDateP.textContent = data.dueDate;
     if (data.priority) priorityP.textContent = data.priority;
   
+    descriptionContext.append(descriptionText);
     buttonContext.append(editBtn, deleteBtn);
     listItemContext.append(titleH, descriptionP, dueDateP, priorityP, buttonContext);
-    listItem.append(listItemContext);
+    listItem.append(listItemContext, descriptionContext);
     list.append(listItem)
   }
 

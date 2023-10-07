@@ -13,3 +13,34 @@ body {
 
     color: brown;
 }
+
+
+.list-item {
+
+    display: grid;
+    background-color: brown;
+
+    /*max-height: 15vh;*/
+
+    grid-template-columns: 1fr 5fr 1fr 1fr 1fr;
+}
+
+h3 {
+    text-align: center;
+}
+
+.list-item p {
+    text-align: center;
+    max-width: 40vw;
+    white-space: nowrap;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.description {
+    margin-top: 0px;
+    margin-bottom: 5px;
+    padding: 15px;
+}
