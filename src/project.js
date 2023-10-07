@@ -1,5 +1,6 @@
 import { projectList, projectBtn, context } from "./dom";
-import { getData, displayAllData, storage } from ".";
+import { storeData, getData, displayAllData, storage } from ".";
+import p from "./logger";
 
 let projects = [];
 
@@ -68,14 +69,18 @@ export function displayProject () {
   
   
   export function displayProjects () {
-  
+
+    if (getData("projects") === null) {
+
+      storage.setItem("projects", "main");
+    }
+ 
     let data = getData("projects");
     projects = data.split(",");
-  
+
     for (let project of projects) {
       createProjectListItem(project);
     }
-  
   }
   
   export function createProjectListItem(project) {
