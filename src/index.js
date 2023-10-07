@@ -1,89 +1,89 @@
-import './style.css'
+import './style.css';
 // import { compareAsc, format } from 'date-fns'
 import {
   dialog, addBtn, titleInpt,
   descriptionInpt, dueDateInpt, priorityInpt,
   createTodoItem, editKey, updateTodoItem
-} from './dom'
-import { displayProjects } from './project'
+} from './dom';
+import { displayProjects } from './project';
 
 // DOM Manipulation
-export const storage = window.localStorage
+export const storage = window.localStorage;
 
 addBtn.addEventListener('click', (e) => {
-  e.preventDefault()
-  const isValid = checkValidation()
+  e.preventDefault();
+  const isValid = checkValidation();
 
   if (isValid) {
     if (e.target.textContent === 'Add') {
       const todo = setTodo(titleInpt.value, descriptionInpt.value,
-        dueDateInpt.value, priorityInpt.value)
+        dueDateInpt.value, priorityInpt.value);
 
-      storeData(todo)
-      displayData(todo.id)
+      storeData(todo);
+      displayData(todo.id);
     } else if (e.target.textContent === 'Edit') {
-      const jsonData = getData(editKey)
-      const data = JSON.parse(jsonData)
+      const jsonData = getData(editKey);
+      const data = JSON.parse(jsonData);
 
-      data.title = titleInpt.value
-      data.description = descriptionInpt.value
-      data.dueDate = dueDateInpt.value
-      data.priority = priorityInpt.value
+      data.title = titleInpt.value;
+      data.description = descriptionInpt.value;
+      data.dueDate = dueDateInpt.value;
+      data.priority = priorityInpt.value;
 
-      updateTodoItem(editKey)
-      storeData(data)
-      displayData(data.id)
+      updateTodoItem(editKey);
+      storeData(data);
+      displayData(data.id);
     }
   }
-})
+});
 
 function checkValidation () {
-  titleInpt.setCustomValidity('')
-  const isValid = titleInpt.reportValidity()
+  titleInpt.setCustomValidity('');
+  const isValid = titleInpt.reportValidity();
 
   if (isValid) {
-    dialog.close()
+    dialog.close();
   } else {
-    titleInpt.setCustomValidity("Shouldn't be empty!")
+    titleInpt.setCustomValidity("Shouldn't be empty!");
   }
 
-  return isValid
+  return isValid;
 }
 
 // TODO OBJECT
 function setTodo (title, description, dueDate, priority) {
-  const todo = {}
-  const project = document.querySelector('.project').id
+  const todo = {};
+  const project = document.querySelector('.project').id;
 
-  todo.id = Date.now().toString()
-  todo.title = title
-  todo.description = description
-  todo.dueDate = dueDate
-  todo.priority = priority
-  todo.project = project
+  todo.id = Date.now().toString();
+  todo.title = title;
+  todo.description = description;
+  todo.dueDate = dueDate;
+  todo.priority = priority;
+  todo.project = project;
 
-  return todo
+  return todo;
 }
 
 // CREATE TODO LIST
-displayAllData()
-displayData()
-displayProjects()
+displayAllData();
+displayData();
+displayProjects();
 function displayData (key) {
   if (hasNumber(key)) {
-    createTodoItem(key)
+    createTodoItem(key);
   }
 }
 export function displayAllData () {
   for (const key in storage) {
     if (hasNumber(key)) {
-      createTodoItem(key)
+      createTodoItem(key);
     }
   }
 }
 
 function hasNumber (myString) {
-  return /\d/.test(myString)
+  return /\d/.test(myString);
 }
 
 // USE OF FORMAT AND COMPARE
@@ -103,15 +103,15 @@ function hasNumber (myString) {
 // WINDOW FUNCTIONS
 
 function storeData (item) {
-  return storage.setItem(item.id, JSON.stringify(item))
+  return storage.setItem(item.id, JSON.stringify(item));
 }
 
 export function getData (key) {
-  return storage.getItem(key)
+  return storage.getItem(key);
 }
 
 export function removeData (key) {
-  return storage.removeItem(key)
+  return storage.removeItem(key);
 }
 
 // if (!Window.storeData) {
