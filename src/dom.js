@@ -20,7 +20,8 @@ export const descriptionLbl = document.createElement("label");
 export const dueDateLbl = document.createElement("label");
 export const priorityLbl = document.createElement("label");
 export const titleInpt = document.createElement("input");
-export const descriptionInpt = document.createElement("input");
+//export const descriptionInpt = document.createElement("input");
+export const descriptionInpt = document.createElement("textarea");
 export const dueDateInpt = document.createElement("input");
 export const priorityInpt = document.createElement("input");
 export const listContext = document.createElement("div");
@@ -42,6 +43,8 @@ list.style.gap = "10px";
 projectList.style.display = "flex";
 projectList.style.gap = "2rem";
 
+descriptionInpt.classList.add("description-input");
+
 showBtn.textContent = "ADD TODO";
 projectBtn.textContent = "NEW PROJECT";
 
@@ -61,6 +64,10 @@ closeBtn.textContent = "Close";
 
 showBtn.addEventListener("click", () => {
   addBtn.textContent = "Add";
+  titleInpt.value = "";
+  descriptionInpt.value = "";
+  dueDateInpt.value = "";
+  priorityInpt.value = "";
   dialog.showModal();
 });
 

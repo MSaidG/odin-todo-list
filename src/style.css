@@ -44,3 +44,10 @@ h3 {
     margin-bottom: 5px;
     padding: 15px;
 }
+
+.description-input {
+
+    min-height: 10vh;
+    word-wrap: break-word;
+    word-break: break-all;
+}
