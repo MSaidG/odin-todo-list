@@ -1,108 +1,89 @@
-import './style.css';
-import { compareAsc, format } from 'date-fns';
-import p from './logger';
-import { dialog, addBtn, titleInpt,
-  descriptionInpt,  dueDateInpt,  priorityInpt, 
-  createTodoItem, editKey, updateTodoItem } from './dom';
-import { displayProjects } from './project';
+import './style.css'
+// import { compareAsc, format } from 'date-fns'
+import {
+  dialog, addBtn, titleInpt,
+  descriptionInpt, dueDateInpt, priorityInpt,
+  createTodoItem, editKey, updateTodoItem
+} from './dom'
+import { displayProjects } from './project'
 
 // DOM Manipulation
-export const storage = window["localStorage"];
+export const storage = window.localStorage
 
+addBtn.addEventListener('click', (e) => {
+  e.preventDefault()
+  const isValid = checkValidation()
 
-addBtn.addEventListener("click", (e) => {
-
-  e.preventDefault();
-  let isValid = checkValidation();
-  
   if (isValid) {
+    if (e.target.textContent === 'Add') {
+      const todo = setTodo(titleInpt.value, descriptionInpt.value,
+        dueDateInpt.value, priorityInpt.value)
 
-    if (e.target.textContent === "Add") {
-      
-        let todo = setTodo(titleInpt.value, descriptionInpt.value, 
-          dueDateInpt.value, priorityInpt.value);
-        
-        storeData(todo);
-        displayData(todo.id);
+      storeData(todo)
+      displayData(todo.id)
+    } else if (e.target.textContent === 'Edit') {
+      const jsonData = getData(editKey)
+      const data = JSON.parse(jsonData)
+
+      data.title = titleInpt.value
+      data.description = descriptionInpt.value
+      data.dueDate = dueDateInpt.value
+      data.priority = priorityInpt.value
+
+      updateTodoItem(editKey)
+      storeData(data)
+      displayData(data.id)
     }
-    else if (e.target.textContent === "Edit") {
+  }
+})
 
-        let jsonData = getData(editKey);
-        let data = JSON.parse(jsonData);
+function checkValidation () {
+  titleInpt.setCustomValidity('')
+  const isValid = titleInpt.reportValidity()
 
-        data.title = titleInpt.value;
-        data.description = descriptionInpt.value;
-        data.dueDate = dueDateInpt.value;
-        data.priority = priorityInpt.value;
-
-        updateTodoItem(editKey);
-        storeData(data);
-        displayData(data.id);
-    } 
-
+  if (isValid) {
+    dialog.close()
+  } else {
+    titleInpt.setCustomValidity("Shouldn't be empty!")
   }
 
-});
-
-
-function checkValidation() {
-
-  titleInpt.setCustomValidity(""); 
-  let isValid = titleInpt.reportValidity();
-  
-  if (isValid){
-    dialog.close();
-  } 
-  else 
-  {
-    titleInpt.setCustomValidity("Shouldn't be empty!");
-  }
-  
-  return isValid;
+  return isValid
 }
 
 // TODO OBJECT
-function setTodo(title, description, dueDate, priority) {
+function setTodo (title, description, dueDate, priority) {
   const todo = {}
-  let project = document.querySelector(".project").id;
+  const project = document.querySelector('.project').id
 
-  todo.id = Date.now().toString();
-  todo.title = title;
-  todo.description = description;
-  todo.dueDate = dueDate;
-  todo.priority = priority;
-  todo.project = project;
+  todo.id = Date.now().toString()
+  todo.title = title
+  todo.description = description
+  todo.dueDate = dueDate
+  todo.priority = priority
+  todo.project = project
 
-  return todo;
+  return todo
 }
 
 // CREATE TODO LIST
-displayAllData();
-displayData();
-displayProjects();
+displayAllData()
+displayData()
+displayProjects()
 function displayData (key) {
-
   if (hasNumber(key)) {
-
-    createTodoItem(key);
+    createTodoItem(key)
   }
-
 }
-export function displayAllData() {
-
-  for (let key in storage) {
-
+export function displayAllData () {
+  for (const key in storage) {
     if (hasNumber(key)) {
-
-      createTodoItem(key);
+      createTodoItem(key)
     }
-  
   }
 }
 
-
-function hasNumber(myString) {
-  return /\d/.test(myString);
+function hasNumber (myString) {
+  return /\d/.test(myString)
 }
 
 // USE OF FORMAT AND COMPARE
@@ -115,39 +96,32 @@ function hasNumber(myString) {
 // ]
 // dates.sort(compareAsc)
 // dates.forEach((e) => {
-// 
+//
 //     p(e);
 // });
-
-
-
 
 // WINDOW FUNCTIONS
 
 function storeData (item) {
-
-  return storage.setItem(item.id, JSON.stringify(item));
+  return storage.setItem(item.id, JSON.stringify(item))
 }
 
 export function getData (key) {
-
-  return storage.getItem(key);
+  return storage.getItem(key)
 }
 
 export function removeData (key) {
-
-  return storage.removeItem(key);
+  return storage.removeItem(key)
 }
 
+// if (!Window.storeData) {
+//   Window.storeData = storeData
+// } else {
+//   console.warn('storeData is already assigned!')
+// }
 
-if (!Window.storeData) {
-  Window.storeData = storeData;
-} else {
-  console.warn('storeData is already assigned!');
-}
-
-if (!Window.getData) {
-  Window.getData = getData;
-} else {
-  console.warn('getStorageData is already assigned!');
-}
+// if (!Window.getData) {
+//   Window.getData = getData
+// } else {
+//   console.warn('getStorageData is already assigned!')
+// }
